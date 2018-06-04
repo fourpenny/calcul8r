@@ -1,6 +1,9 @@
+/*General styles */
+
 * {
   margin: 0;
-  padding: 0
+  padding: 0;
+  box-sizing: border-box;
 }
 
 :root {
@@ -47,10 +50,12 @@ body {
 .logo h2 {
   display: inline;
   padding-right: 0.2vw;
+  font-size: 1em;
 }
 
 .logo h3 {
   display: inline;
+  font-size: 1em;
 }
 
 /*Display area (for results/input) */
