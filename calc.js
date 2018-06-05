@@ -11,70 +11,106 @@ function init() {
 
 function numberDisplay(event) {
   let pressed = event.target.innerText;
-  //If the button pushed is a number, that digit is added to the current input
   if (!isNaN(pressed)){
     firstValue.push(event.target.innerText);
     let currentValue = firstValue.join('');
     updateDisplay(currentValue)}
-  //If the button pushed is an operator or results in clearing, the calculator
-  //will check for which function to perform
   else {
-    console.log(secondValue);
-  //If there are already two numbers being operated upon, an operation previously
-  //selected will be performed on the two and they will be stored as the secondValue.
-      if (secondValue != undefined) {
-        switch(event.target.innerText) {
-          case 'C':
-            clearAll();
-            break;
-          case '<-':
-            //backspace();
-            break;
-          case '=':
-            combine(firstValue, secondValue, operation)
-            break;
-          default:
-            operation = event.target.innerText;
-            console.log(operation);
-            combine(firstValue, secondValue, operation);
-      }
+    console.log(pressed);
+    updateDisplay(pressed);
+    whatOperation(pressed);
+    console.log('operation ' + operation);
+    if (secondValue != undefined) {
+      secondValue = combine(firstValue, secondValue, operation);
+      console.log(secondValue);
     } else {
       secondValue = firstValue.join('');
       firstValue = [];
-      console.log('first' + firstValue)
-      console.log('second' + secondValue);
-      operation = event.target.innerText;
-      updateDisplay(operation);
     }
   }
 }
 
-function updateDisplay(number) {
-  const displayBox = document.querySelector('.inner-display');
-  const contentArea = document.createElement('p');
-  if (displayBox.hasChildNodes()) {
-    displayBox.removeChild(displayBox.childNodes[0]);
+  function updateDisplay(number) {
+    const displayBox = document.querySelector('.inner-display');
+    const contentArea = document.createElement('p');
+    if (displayBox.hasChildNodes()) {
+      displayBox.removeChild(displayBox.childNodes[0]);
+    }
+    let text = document.createTextNode(number);
+    contentArea.appendChild(text);
+    displayBox.appendChild(contentArea);
   }
-  let text = document.createTextNode(number);
-  contentArea.appendChild(text);
-  displayBox.appendChild(contentArea);
-}
 
-function clearAll() {
-  firstValue = [];
-  secondValue = undefined;
-  operation = undefined;
-  updateDisplay(0);
+function whatOperation(op) {
+  console.log(op);
+  let functions = {
+    'x': function() {
+      operation = 'multiply';
+      return;
+    },
+    '-': function() {
+      operation = 'subtract';
+      return;
+    },
+    '÷': function() {
+      operation = 'divide';
+      return;
+    },
+    '+': function() {
+      operation = 'add';
+      return;
+    },
+    'C': function() {
+      //clearAll();
+      return;
+    },
+    '<-': function() {
+      //backspace();
+      return;
+    },
+    '=': function() {
+      combine(firstValue, secondValue, operation);
+      return;
+    },
+    'default': function() {
+      console.log('Oops, something went wrong');
+      return;
+    }
+  };
+  return (functions[op] || functions['default'])();
 }
 
 function combine(first, second, operator) {
-  console.log("howdy");
-  //If equals is pressed with no input (or input of zero), zero is automatically returned.
+  console.log(operator);
   if (firstValue == 0) {
-    updateDisplay(0);
-    clearAll();
+    if (secondValue != undefined) {
+      return secondValue;
+    } else {
+      return 0;
+    }
   }
+  let a = first;
+  let b = second;
+  console.log('first is ' + first);
+  console.log('second is ' + second);
+  /*let doFunction = {
+    'multiply': function(first, second) {
+      return (first * second);
+    },
+    'subtract': function(first, second) {
+      return (second - first);
+    },
+    'add': function(a, b) {
+      return a;
+    },
+    'divide': function(first, second) {
+      return (second / first);
+    },
+    'default': function() {
+      return 'Default';
+    }
+  }
+  return (doFunction[operator] || doFunction['default'])();*/
 }
 
 init();
-updateDisplay(0);
