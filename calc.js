@@ -22,10 +22,13 @@ function numberDisplay(event) {
     console.log('operation ' + operation);
     if (secondValue != undefined) {
       secondValue = combine(firstValue, secondValue, operation);
-      console.log(secondValue);
-    } else {
+      updateDisplay(secondValue);
+      firstValue = [];
+    } else if (pressed != '<-'){
       secondValue = firstValue.join('');
       firstValue = [];
+    } else {
+      return;
     }
   }
 }
@@ -61,15 +64,18 @@ function whatOperation(op) {
       return;
     },
     'C': function() {
-      //clearAll();
+      clearAll();
       return;
     },
     '<-': function() {
-      //backspace();
+      backspace();
       return;
     },
     '=': function() {
-      combine(firstValue, secondValue, operation);
+      let answer = combine(firstValue, secondValue, operation);
+      updateDisplay(answer);
+      secondValue = answer;
+      firstValue = [];
       return;
     },
     'default': function() {
@@ -81,7 +87,6 @@ function whatOperation(op) {
 }
 
 function combine(first, second, operator) {
-  console.log(operator);
   if (firstValue == 0) {
     if (secondValue != undefined) {
       return secondValue;
@@ -89,19 +94,17 @@ function combine(first, second, operator) {
       return 0;
     }
   }
-  let a = first;
-  let b = second;
-  console.log('first is ' + first);
-  console.log('second is ' + second);
-  /*let doFunction = {
+  a = Number(first);
+  b = Number(second);
+  let doFunction = {
     'multiply': function(first, second) {
       return (first * second);
     },
     'subtract': function(first, second) {
       return (second - first);
     },
-    'add': function(a, b) {
-      return a;
+    'add': function(first, second) {
+      return (first + second);
     },
     'divide': function(first, second) {
       return (second / first);
@@ -110,7 +113,18 @@ function combine(first, second, operator) {
       return 'Default';
     }
   }
-  return (doFunction[operator] || doFunction['default'])();*/
+  return (doFunction[operator] || doFunction['default'])(a, b);
+}
+
+function clearAll() {
+  updateDisplay(0);
+  secondValue = undefined;
+  firstValue = [];
+}
+
+function backspace() {
+  firstValue.pop();
+  updateDisplay(firstValue);
 }
 
 init();
